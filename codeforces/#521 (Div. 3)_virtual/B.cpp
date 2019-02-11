@@ -1,0 +1,121 @@
+/*
+     521 div3 virtual contest
+   17/11/18
+   by ahmed_drawy
+   accepted
+   greedy
+
+
+*/
+
+
+#include <bits/stdc++.h>
+using namespace std;
+//#define push_back               pb;
+//#define make_pair               mp;
+#define lp(i,start , end)       for(int i = start ; i<end ; ++i)
+#define Rlp(i,start , end)      for(int i = start ; i>end ; --i)
+#define all(v)                   ((v).begin(),(v).end())
+#define sz(v)                  (int)((v).size())
+#define clr(v,d)                memset(v , d , sizeof(v))
+#define isOn(S, j) (S & (1 << j))
+#define setBit(S, j) (S |= (1 << j))
+#define clearBit(S, j) (S &= ~(1 << j))
+#define toggleBit(S, j) (S ^= (1 << j))
+#define lowBit(S) (S & (-S))
+#define setAll(S, n) (S = (1 << n) - 1)
+
+#define modulo(S, N) ((S) & (N - 1))   // returns S % N, where N is a power of 2 *haven't understood this yet
+#define isPowerOfTwo(S) (!(S & (S - 1)))            // done
+
+#define nearestPowerOfTwo(S) ((int)pow(2.0, (int)((log((double)S) / log(2.0)) + 0.5)))  // TBD
+
+
+#define turnOffLastBit(S) ((S) & (S - 1))       // turn off last unset bit from right
+#define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
+#define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
+#define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+
+
+
+typedef long long               ll;
+typedef vector<int>             vi;
+typedef vector  <ll>            vll;
+typedef vector<vector<int> >    adj;
+typedef pair<int ,int>          pii;
+
+
+const double EPS =1e-7;
+const int OO = 1e6;
+bool sortpair( const pair<int , int> & x, const pair<int , int> & y)
+{
+
+    return  x.first != y.first ? x.first < y.first : x.second > y.second ;
+
+
+}
+int dcomp(double x , double y)
+{
+    return fabs(x-y) <= EPS? 0: x>y?1:-1;
+}
+void smile(){
+        ios_base::sync_with_stdio(0);
+        cin.tie(NULL);
+        cout.tie(NULL);
+}
+
+void printarr(int arr [] , int n){
+lp(i,0,n) cout<<arr[i]<<" ";cout<<endl;
+}
+
+void printset(int n ){
+    stack <int> myst;
+    while(n)    myst.push(n%2), n/=2;
+    while(!myst.empty())    cout<<myst.top(), myst.pop();
+    cout<<endl;
+}
+int memo[101][2];
+int arr[101];int n ;
+int solve(int arr[ ] , int indx){
+    if(indx == n-1)return  0 ;
+
+
+}
+
+int dp(int indx , bool light ){
+    if(indx == n-2 )
+        return 0 ;
+    int &ret = memo[indx ][light];
+    if(ret!= -1){
+        return  ret;
+    }
+    ret = INT_MAX ;
+    if(light ==0 &&arr[indx -1] ==1 &&arr[indx+1] == 1){
+            cout<<indx+1<<endl;
+        ret =  min (ret, 1+dp(indx+1 , 0));
+//        ret = min (ret , dp(indx +1 , 1));
+    }
+    else
+        ret = min(ret , dp(indx+1 , arr[indx+1]));
+    return ret;
+
+}
+int main(){
+	smile();
+	cin >> n;
+    lp(i,0, n)cin>>arr[i];
+//    clr(memo , -1);
+//    cout<<dp(0,arr[1]);
+    int prev = arr[0];
+    int cnt = 0  ;
+    for(int i = 1 ; i < n-1 ; ++i){
+        if(arr[i]== 0 && arr[i-1] ==1 &&arr[i+1 ] ==1){
+            arr[i+1] = 0;
+            cnt++;
+        }
+
+
+    }
+    cout<<cnt <<endl;
+
+}
