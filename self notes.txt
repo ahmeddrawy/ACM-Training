@@ -1,0 +1,41 @@
+/// self notes - started on 12/2/2019
+
+
+
+/// modular arithemtic
+
+    1-   a = nq + r;
+        r : remainder
+        r= a - n*q      , q= floor(a/n);
+    2-  (a%mod +   a )%mod;
+        a%mod enough if a is +v
+    3- modulo is expensive operation  better to subtract if you can
+        while(a>=n) a-=mod ;
+        while(a<0)a+=mod ;
+    4- a%mod == b%mod  therefore => (a-b)%mod == 0
+        because if you the difference between them is == mod * n , where n belongs to the set ={0 , 1, ... };
+        e.q : 4%3 and 7%3 or 10 %3 the diff here is 3 and 6 , making 2 cycles or one cycle or n cycles
+
+    5-  (a%mod ) %mod  == a%mod
+        (mod^x) %mod == 0 for all x>=0 ;
+        -a%mod != a%mod
+    6 - (a+b)%mod == (a%mod + b%mod )%mod
+         (a*b)%mod == (a%mod * b%mod )%mod
+         (a^b)%mod if b is even
+         (a^b/2 %mod * a^b/2 %mod )%mod
+    7-  check intermediate overflow
+ /// counting and combinatrics
+    1 - product rule a*b
+        5 jackets 3 shoes
+        5*3 outfit
+    2 - sum rule
+        A union B , if A and B are disjoint , therefore A union B = A + B
+        else
+            A+ B - A intersect B
+    3 - inclusion exclusion
+        if 3 sets then 2^3 -1 subsets
+        if length of subset odd add it if even subtract it
+
+
+
+
