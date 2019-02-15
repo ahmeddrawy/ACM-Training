@@ -15,6 +15,9 @@
     13 - power mod
     14 - prefix matrix sum
     15 - rand numbers without collisions
+    16 - don't ceil the negative
+    17 - dividing sk to k elements and max them
+    18 - GCD  and LCM and number theory notes
 */
 
 ///     1-    code to remove all not alpha chars from a string and transform to lower
@@ -295,3 +298,84 @@ void perfixMATRIX(int n , int m ){
 
 ///     15 - rand numbers without collisions
 (rand() * RAND_MAX + rand()) % 1000000
+///     16 - don't ceil the negative
+
+///     17 -  to divide the sum evenly on K partions you shouldn't ceil
+int remi = sk%k;
+lp(i,0,k){
+cout<<sk/k +(remi> 0 ) <<" " , remi--;
+}
+
+///     18- gcd and lcm and number theory video
+/// gcd eliminate the cycles by mod
+int gcd (int a , int b ){
+    if(b== 0) return  a;
+    return  gcd(b , b%a);
+}
+
+/// a = 2^3 * 7^6 , b = 2^2 *7^3
+/// gcd = 2^min(3 , 2 ) *7^min(6 , 3)
+/// lcm = 2^max(3,2) *7^max(6,3)
+then lcm = a*b/gcd(a , b );
+
+
+/**
+  permutations from rule of product
+  first you have n options then n-1 options then n-2  ... 1
+  p(n) = n*n-1 * n-2 * .... * 1 = n!
+  p(n,r) = n* n-1 * n-2 * ... (n-r+1)
+
+   p(n , r) = n! /(n-r)! = c(n , r) * r!
+   p with repitions  =n^n
+
+   take care of the overflow
+   some values get very high
+
+
+
+
+
+
+ */
+
+/*     todo
+    check the stirling numbers - # of permutations to divide n elements to k groups
+                               - # of permutations of n elements with k permutation cycles
+    check the Bell number - # of partions of a set of of size n
+
+
+ */
+/**
+ * power in O(log p)
+ * 10^16 = 10^8 * 10^8
+ * 10^17 = 10^8 * 10^8 * 10
+ */
+ int pow (int b , int p ){
+     if(p == 0 )return  1;
+     int sq = pow(b , p/2);
+     sq *=sq;
+
+     if(p&1 )sq *=b; /// if odd
+
+    return  sq ;
+
+ }
+/**
+ *      calcualting a^1 + a^2 + a^3 + a^4 + ... +a^n
+ *
+ *      at  n == 6
+ *      a^1 + a^2 + a^3 + .. +a^6 = a^1 + a^2 + a^3 + (a^1 * a^3 + a^2 *a^3 + a^3 * a^3)
+ *                                  = ,,    ,,   + a^3(a^1 + a^2 + a^3)
+ *     take the (a + a^2 + a^3 )common factor
+ *                                   = (1 + a^3 )*(a + a^2 + a^3)
+ *
+ *
+ *
+ */
+
+/** intro to combinatorics  https://www.topcoder.com/community/competitive-programming/tutorials/basics-of-combinatorics/
+ * 
+ *
+ *
+ *
+ */

@@ -1,7 +1,6 @@
-/**
+/** v.imp todo - add to the sheet
 
-  A- #538 (Div. 2) - live
-
+  B- #538 (Div. 2) - live
   10/02/19
   by -ahmed_drawy
 
@@ -67,52 +66,44 @@ void smile(){
 
 
 }
-ll arr[200005];
-int main(){
+int main(){ /// todo
     smile();
+
     int  n , m  , k  ; cin >> n >>m>>k;
+    vector<int > arr(n);
+    vector < pair <int , int > > sorted  ;
     lp(i,0,n ) {
         cin >>arr[i ];
+        sorted.push_back({arr[i] , i});
 
     }
-    int cnt =n -  m*k;
+
+    sort(sorted.rbegin() , sorted.rend());
+    map<int , int >mmap;
     ll ans = 0 ;
-    vector<int > indx  ;
-    lp(i,0,n ){
-        priority_queue<ll , vector<ll > , greater<ll> > pq;
+    lp(i,0,m*k ){
+        mmap[sorted[i].second  ] =1;
+        ans+=sorted[i].first;
 
-        for(int j = 0  ; j < m  ; ++j , ++i){
-            pq.push(arr[i]);
-
-
-        }
-        cout<<pq.top()<<endl;
-////        sort(mvec.rbegin() ,m/*vec.rend() );
-
-        while(cnt  && arr[i+1] >pq.top()){
-            pq.push(arr[i+1]);
-            ++i;
-            cnt--;
-
-        }
-        while (!pq.empty()){
-
-            cout<<pq.top()<<" ";
-        }
-        cout << endl ;
-//
-//       if(cnt && i == n){
-//            mvec.push_back(arr[i]);
-//        }
-//
-//        indx.push_back(i);
-//        --i;
-//
-//        lp(j,0,m)
-//            ans+=mvec[j];
-//*/
     }
-    cout<<ans <<endl;
-    for(int i = 0 ; i < k-1 ; ++i )cout<<indx[i]<<" ";
+    cout<<ans<<endl;
+    int cnt  = 0 ;
+
+    lp(i,0,n ) {
+        int c = 0 ;
+        for (; i<n; ++i) {
+            if(c < m ) {
+                if(mmap[i])c++;
+            }
+            else {
+                if(cnt<k-1)
+                    cout<<i<<" ",cnt++;
+                --i;
+                break;
+            }
+
+        }
+
+    }
 
 }

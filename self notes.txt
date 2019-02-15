@@ -37,5 +37,7 @@
         if length of subset odd add it if even subtract it
 
 
+/// to divide the sum evenly on K partions you shouldn't ceil
+
 
 
