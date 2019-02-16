@@ -18,6 +18,15 @@
     16 - don't ceil the negative
     17 - dividing sk to k elements and max them
     18 - GCD  and LCM and number theory notes
+        18.1 - gcd and lcm
+        18.2 - permutations and combinations from product rule
+        18.3 - stirling numbers
+            18.3.1 - # of permutations to divide n elements to k groups
+            18.3.2 - # of permutations of n elements with k permutation cycles
+        18.4 - Bell numbers  - # of partions of a set of of size n
+        18.5 - power in log (p)
+        18.6 - get the a^1 + a^2 + ... + a^n
+        18.7 - intro to combinatrics from top coder
 */
 
 ///     1-    code to remove all not alpha chars from a string and transform to lower
@@ -264,12 +273,7 @@ void addedge(int x , int y , vector<vector<int> > &vec){
 ///     12-  the amount of numbers divisible by M in a range from A to B
 
 int solution(int A, int B, int M) {
-    if (A % M == 0)
-        return (B / M) - (A / M) + 1;
-
-    return (B / M) - (A / M);
-
-
+    return (B / M) - (A / M) +(A % M == 0 || B%M == 0);
 }
 
 
@@ -312,6 +316,8 @@ int gcd (int a , int b ){
     if(b== 0) return  a;
     return  gcd(b , b%a);
 }
+
+
 
 /// a = 2^3 * 7^6 , b = 2^2 *7^3
 /// gcd = 2^min(3 , 2 ) *7^min(6 , 3)
@@ -360,6 +366,7 @@ then lcm = a*b/gcd(a , b );
     return  sq ;
 
  }
+//  todo     check then code in mostafa saad video https://www.youtube.com/watch?v=YklnFXpq0ZE
 /**
  *      calcualting a^1 + a^2 + a^3 + a^4 + ... +a^n
  *
@@ -368,13 +375,28 @@ then lcm = a*b/gcd(a , b );
  *                                  = ,,    ,,   + a^3(a^1 + a^2 + a^3)
  *     take the (a + a^2 + a^3 )common factor
  *                                   = (1 + a^3 )*(a + a^2 + a^3)
- *
- *
- *
  */
 
 /** intro to combinatorics  https://www.topcoder.com/community/competitive-programming/tutorials/basics-of-combinatorics/
- * 
+ * =>    When we choose k objects from n-element set in such a way that
+ *        the order matters and each object can be chosen only once
+ *              p(n, k ) = n! / (n-k)!
+ *
+ * =>     The number of possible choices of k objects from a set of n objects when order is important and one object can be chosen more than once:
+ *          n * k
+ *
+ * =>     The number of different permutations of n objects, where there are n1 indistinguishable objects of type 1, n2 indistinguishable objects of type 2,…,
+ *          and nk indistinguishable objects of type k (n1+n2+…+nk=n), is:
+ *          Cn(n1 , n2 ... nk ) = n!/(n1! n2! ... nk!)
+ *
+ * =>      In combinations we choose a set of elements (rather than an arrangement, as in permutations) so the order doesn’t matter.
+ *          The number of different k-element subsets (when each element can be chosen only once) of n-element set is
+ *          nCk = n! / (k! n-k !)
+ *
+ * =>       Let’s say we choose k elements from an n-element set, the order doesn’t matter and each element can be chosen
+ *          more than once. In that case, the number of different combinations is:
+ *          (n+k -1 ) C k = (n+k-1 )/ k!*(n-1)!
+ *
  *
  *
  *
