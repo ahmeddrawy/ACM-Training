@@ -1,15 +1,18 @@
-/**imp
+/*
+  B - #540 (Div. 3) - live
 
-  369 - Combinations -UVA - sheet B
-  16/02/19
+  19/02/19
   by ahmed_drawy
 
 
 
 */
 
+
 #include <bits/stdc++.h>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 using namespace std;
 //#define push_bac                pb;
 //#define make_pair               mp;
@@ -61,82 +64,57 @@ void smile(){
     cout.tie(NULL);
 #ifndef ONLINE_JUDGE
     freopen("/home/www/Desktop/training/in.txt", "r" , stdin);
-    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
+//    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 
 
 }
-const int N = 1e3 + 5;
-ll factor[N];
-void sieve() {
-    for (int i = 2; i * i < N; ++i) {
-        if (factor[i])
-            continue;
-        for (int j = i * i; j < N; j += i)
-            factor[j] = i;
-    }
-}
-void factorize(int x , map<ll , int> &mmap) {
-    while (x > 1) {
-        if (factor[x] == 0)
-            factor[x] = x;
-        mmap[factor[x]]++;
-        x /= factor[x];
-    }
-}
-long long power(long long base, int exp)
-{
-    if (!exp)
-        return 1LL;
-    ll sq = power(base, exp/2);
-    sq = (sq * sq);
-    if (exp&1)
-        sq = (sq * base);
-    return sq;
-}
-
-
-/// we first has the nCk = (n* n-1 * n-2 * ... n-k +1 )/(k * k-1 * ... * 2 *1)
-///then we prime factorize them to factorize as much as possible
-
-int main(){
+int arr[200005];
+int even[200005];
+int odd[200005];
+int main() {
     smile();
-    sieve();
-    int n , m  ;
-    while(cin >> n >>  m) {
-        if(!n && !m )break;
-        map<ll, int> num;
-        map<ll, int> denum;
-        for (int i = n; i > n - m; --i) {
-            factorize(i, num);
+    int n ; cin >> n;
+    inN(arr , n);
+    ll sum = 0 ;
+
+    even[0] = 0 ;
+    odd[0] = arr[0];
+    lp(i,1,n+2){
+        sum+=arr[i];
+//        even[i] = odd[i] =arr[i];
+        if(i&1){
+            even[i] =arr[i];
+
         }
-        for (int i = m; i > 0; --i) {
-            factorize(i, denum);
+        else {
+            odd[i] =arr[i];
+
         }
-        lp(i, 1, 101) {
-            if (num[i] >= denum[i]) {
-                num[i] -= denum[i];
-                denum[i] = 0;
-            }
-            else  {
-                denum[i]-=num[i];
-                num[i]=0;
-            }
-        }
-        ll x = 1;
-        lllp(i, 1, 101) {
-            if (num[i]) {
-                x *= power(i, num[i]);
-            }
-        }
-        ll y = 1;
-        lllp(i, 1, 101) {
-            if (denum[i]) {
-                y *= power(i, denum[i]);
-            }
-        }
-        cout<<n<<" things taken "<<m<<" at a time is "<<x/y<<" exactly.\n";
 
     }
+    lp(i,1,n+1){
+        even[i] += even[i-1];
+        odd[i] +=odd[i-1];
+    }
 
+
+    int ret= 0 ;
+    lp(i,0,n) {
+        if(i) {
+            ll l = even[i-1] + odd[n] - odd[i];
+            ll r= odd[i-1 ] + even[n] - even[i];
+            if ( l ==r ){
+
+                ret++;
+
+            }
+
+        }
+        else{
+            if(odd[n] - odd[i] == even[n] - even[i])
+                ret++;
+        }
+    }
+    cout<<ret;
 }

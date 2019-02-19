@@ -1,15 +1,18 @@
-/**imp
+/*
+   A - #540 (Div. 3) - live
 
-  369 - Combinations -UVA - sheet B
-  16/02/19
+  19/02/19
   by ahmed_drawy
 
 
 
 */
 
+
 #include <bits/stdc++.h>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 using namespace std;
 //#define push_bac                pb;
 //#define make_pair               mp;
@@ -61,82 +64,43 @@ void smile(){
     cout.tie(NULL);
 #ifndef ONLINE_JUDGE
     freopen("/home/www/Desktop/training/in.txt", "r" , stdin);
-    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
+//    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 
 
 }
-const int N = 1e3 + 5;
-ll factor[N];
-void sieve() {
-    for (int i = 2; i * i < N; ++i) {
-        if (factor[i])
-            continue;
-        for (int j = i * i; j < N; j += i)
-            factor[j] = i;
+ll n ;
+bool can (int a, int b){
+    return a +2*b  == n;
+}
+int BS(int a){
+    int l = 0  , r = n ;
+    while(l < r){
+        int mid = l +(r- l)/2;
+        if(can ( a,mid  )){
+            return mid ;
+        }
+        else {
+            l= mid ;
+        }
     }
-}
-void factorize(int x , map<ll , int> &mmap) {
-    while (x > 1) {
-        if (factor[x] == 0)
-            factor[x] = x;
-        mmap[factor[x]]++;
-        x /= factor[x];
-    }
-}
-long long power(long long base, int exp)
-{
-    if (!exp)
-        return 1LL;
-    ll sq = power(base, exp/2);
-    sq = (sq * sq);
-    if (exp&1)
-        sq = (sq * base);
-    return sq;
-}
 
-
-/// we first has the nCk = (n* n-1 * n-2 * ... n-k +1 )/(k * k-1 * ... * 2 *1)
-///then we prime factorize them to factorize as much as possible
-
-int main(){
+}
+int main() {
     smile();
-    sieve();
-    int n , m  ;
-    while(cin >> n >>  m) {
-        if(!n && !m )break;
-        map<ll, int> num;
-        map<ll, int> denum;
-        for (int i = n; i > n - m; --i) {
-            factorize(i, num);
+    int q;cin >>q;
+    lp(i,0,q) {
+        cin >> n;
+        ll a, b;
+        cin>>a>>b;
+        if(2*a < b ){
+            cout<< n *a;
         }
-        for (int i = m; i > 0; --i) {
-            factorize(i, denum);
+        else {
+            cout<<n/2  *b+ n%2 *a;
         }
-        lp(i, 1, 101) {
-            if (num[i] >= denum[i]) {
-                num[i] -= denum[i];
-                denum[i] = 0;
-            }
-            else  {
-                denum[i]-=num[i];
-                num[i]=0;
-            }
-        }
-        ll x = 1;
-        lllp(i, 1, 101) {
-            if (num[i]) {
-                x *= power(i, num[i]);
-            }
-        }
-        ll y = 1;
-        lllp(i, 1, 101) {
-            if (denum[i]) {
-                y *= power(i, denum[i]);
-            }
-        }
-        cout<<n<<" things taken "<<m<<" at a time is "<<x/y<<" exactly.\n";
-
+        cout<<endl;
     }
+
 
 }

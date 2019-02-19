@@ -401,3 +401,24 @@ then lcm = a*b/gcd(a , b );
  *
  *
  */
+
+/// generating the combination by next permutation
+vector<bool> mvec(n);
+std::fill(mvec.end() - r, mvec.end(), true); /// nCr
+double ans  = 0 ;
+ll cnt  = 0 ;
+do {
+    ans++;
+    vector<int > temp ;
+    lp(i,0,n){
+    if(mvec[i]){
+            temp.push_back(arr[i]); /// the element selected now
+        }
+    }
+
+
+    if(__gcd(temp[0] , temp[1]) == 1)
+    cnt++;
+
+}
+while(next_permutation(mvec.begin() , mvec.end()));
