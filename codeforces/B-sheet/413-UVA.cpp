@@ -1,8 +1,7 @@
 /*
- * accepted
-   D1 - #540 (Div. 3) - live
-
-  19/02/19
+    upsolving
+    413 - uva
+  17/02/19
   by ahmed_drawy
 
 
@@ -64,47 +63,51 @@ void smile(){
     cout.tie(NULL);
 #ifndef ONLINE_JUDGE
     freopen("/home/www/Desktop/training/in.txt", "r" , stdin);
-//    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
+    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 
 
 }
+int arr[55];
 
-int n , m ;
-int dp[101][10005];
-int arr[101];
-int solve(int indx , int pages   ){
-//    cout<<indx << " "<<pages<<endl;
-    if(pages <= 0 )
-        return 0;
-    if(indx == n ){
-        if(pages <= 0 )
-            return 0;
-        else
-            return 1001;
-    }
-//    int & ret =dp[indx][pages];
-    if(~ret )return  ret ;
-    int ret = 1001;
-    int ans = 0 ;
-
-    for(int i = 0 , j = indx ; j<n ; ++i , ++j){
-        ans +=max(0,  arr[j] - i );
-        ret = min(ret ,1+ solve(j+1 , pages - ans  ));
-    }
-    return ret;
-}
-int main() { /// todo upsolve again and check the hard version
+int main() {
     smile();
-    cin >> n >> m ;
-    clr(dp , -1);
 
-    inN(arr ,n );
-    sort(arr , arr+ n  , greater<int>());
-    int ret= solve(0 , m );
-    if(ret <=n)
-        cout<<ret;
-    else
-        cout<<-1;
+    int n ;
+    while( cin >> n) {
+        if(!n) break;
+        inN(arr, n );
+        vector<bool> mvec(n);
+        std::fill(mvec.end() - 2, mvec.end(), true);
+        double ans  = 0 ;
+        ll cnt  = 0 ;
+        do {
+            ans++;
+            vector<int > temp ;
+            lp(i,0,n){
+                if(mvec[i]){
+                    temp.push_back(arr[i]);
+                }
+            }
+
+
+            if(__gcd(temp[0] , temp[1]) == 1)
+                cnt++;
+
+        }
+        while(next_permutation(mvec.begin() , mvec.end()));
+        double ret = 0 ;
+        if(cnt )
+            ret = (ans * 6.0 )/cnt;
+
+        ret =sqrt(ret);
+        cout<<fixed<<setprecision(6);
+        if(cnt)
+            cout<<ret<<'\n';
+        else {
+            cout<<"No estimate for this data set.\n";
+        }
+    }
+
 }
-
+//#pragma clang diagnostic pop

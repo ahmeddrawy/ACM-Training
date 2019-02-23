@@ -1,8 +1,7 @@
-/*
- * accepted
-   D1 - #540 (Div. 3) - live
+/* accepted
+   D2 - #540 (Div. 3) - upsolving
 
-  19/02/19
+  22/02/19
   by ahmed_drawy
 
 
@@ -70,41 +69,44 @@ void smile(){
 
 }
 
-int n , m ;
-int dp[101][10005];
-int arr[101];
-int solve(int indx , int pages   ){
-//    cout<<indx << " "<<pages<<endl;
-    if(pages <= 0 )
-        return 0;
-    if(indx == n ){
-        if(pages <= 0 )
-            return 0;
-        else
-            return 1001;
-    }
-//    int & ret =dp[indx][pages];
-    if(~ret )return  ret ;
-    int ret = 1001;
-    int ans = 0 ;
+ll n , m ;
+ll arr[200005];
 
-    for(int i = 0 , j = indx ; j<n ; ++i , ++j){
-        ans +=max(0,  arr[j] - i );
-        ret = min(ret ,1+ solve(j+1 , pages - ans  ));
+bool can (int k){
+    ll sum = 0, cnt= 0, indx = 0  ;
+    for(;;cnt++){   /// cnt is the number of cups of coffee
+        if(sum >= m )   return 1;
+        if(indx >= n )  return sum>=m;
+        for(int i = 0 ; i< k && indx <=n; ++i , ++indx ) { ///for each day add the largest in the array
+            /// we loop over all days adding the largest numbers
+            sum += max(0LL , arr[indx]-cnt );
+        }
     }
-    return ret;
 }
-int main() { /// todo upsolve again and check the hard version
+int main() { /// todo up solve again and check the hard version
     smile();
     cin >> n >> m ;
-    clr(dp , -1);
 
     inN(arr ,n );
-    sort(arr , arr+ n  , greater<int>());
-    int ret= solve(0 , m );
-    if(ret <=n)
-        cout<<ret;
-    else
-        cout<<-1;
-}
+    sort(arr , arr+ n  , greater<ll>());
+    int ans = 1;
+    int l = 1 , r = n ;
+    while(l < r) {
+        int mid = l + (r- l )/2 ;
+        if(can(mid )){
+            r   = mid ;
 
+        }
+        else {
+            l = mid +1 ;
+        }
+    }
+    if(can(l)){
+        cout<<l ;
+    }
+    else if(can(ans)){
+        cout<<ans;
+    }
+    else
+        cout << -1 ;
+}

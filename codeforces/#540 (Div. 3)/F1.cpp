@@ -1,8 +1,7 @@
 /*
- * accepted
-   D1 - #540 (Div. 3) - live
+   E - #540 (Div. 3) - upsolving
 
-  19/02/19
+  22/02/19
   by ahmed_drawy
 
 
@@ -69,42 +68,62 @@ void smile(){
 
 
 }
+ll n , k ;
+const int N = 300005;
+vector<vector<int > > mvec(N);
+bool visited[N];
+int arr[N];
+vector<pii> mp;
 
-int n , m ;
-int dp[101][10005];
-int arr[101];
-int solve(int indx , int pages   ){
-//    cout<<indx << " "<<pages<<endl;
-    if(pages <= 0 )
-        return 0;
-    if(indx == n ){
-        if(pages <= 0 )
-            return 0;
-        else
-            return 1001;
-    }
-//    int & ret =dp[indx][pages];
-    if(~ret )return  ret ;
-    int ret = 1001;
-    int ans = 0 ;
+void dfs(int par  , int &b   , int &r ){
+    visited[par] =1;
+    for(auto it : mvec[par] ){
+        if(!visited[it]){
+            if(arr[it] == 1){
+                r++;
+            }
+            else if(arr[it ]) b++;
 
-    for(int i = 0 , j = indx ; j<n ; ++i , ++j){
-        ans +=max(0,  arr[j] - i );
-        ret = min(ret ,1+ solve(j+1 , pages - ans  ));
+            dfs(it, b , r);
+
+        }
     }
-    return ret;
+
 }
-int main() { /// todo upsolve again and check the hard version
+int main() {
     smile();
-    cin >> n >> m ;
-    clr(dp , -1);
+    cin >> n ;
+    lp(i,0, n ){
+        cin >>arr[i+1] ;
+    }
+    int x , y;
+    lp(i,0,n-1){
+        cin >>x>>y;
+        mvec[x].push_back(y);
+        mvec[y].push_back(x);
+        mp.push_back({x,y});
+    }
+    int ans = 0 , b1 = 0 , b2= 0 , r1 = 0  , r2 = 0;
+    lp(i,0,n-1){
+        auto it = mp[i];
+        memset(visited , 0 , sizeof(visited));
+        b1 = arr[it.first]== 2;
+        r1 = arr[it.first] ==1;
+        b1= arr[it.second] == 2;
+        r2 = arr[it.second] ==1;
+        visited[it.second] =1;
+        dfs(it.first ,b1 , r1 );
+        memset(visited , 0 , sizeof(visited));
+        visited[it.first] =1;
+        dfs(it.second,b2, r2);
+        if(b1 == r2 && b2 == 0 && r1 == 0){
+            ans++;
+        }
+        else if(b2 == r1 && b1 == 0 && r2 == 0)ans++;
 
-    inN(arr ,n );
-    sort(arr , arr+ n  , greater<int>());
-    int ret= solve(0 , m );
-    if(ret <=n)
-        cout<<ret;
-    else
-        cout<<-1;
+    }
+    cout<<ans;
+
+
+
 }
-

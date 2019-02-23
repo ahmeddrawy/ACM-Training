@@ -1,8 +1,7 @@
 /*
- * accepted
-   D1 - #540 (Div. 3) - live
+  uva - 713 - sheet B
 
-  19/02/19
+  23/02/19
   by ahmed_drawy
 
 
@@ -70,41 +69,36 @@ void smile(){
 
 }
 
-int n , m ;
-int dp[101][10005];
-int arr[101];
-int solve(int indx , int pages   ){
-//    cout<<indx << " "<<pages<<endl;
-    if(pages <= 0 )
-        return 0;
-    if(indx == n ){
-        if(pages <= 0 )
-            return 0;
-        else
-            return 1001;
-    }
-//    int & ret =dp[indx][pages];
-    if(~ret )return  ret ;
-    int ret = 1001;
-    int ans = 0 ;
-
-    for(int i = 0 , j = indx ; j<n ; ++i , ++j){
-        ans +=max(0,  arr[j] - i );
-        ret = min(ret ,1+ solve(j+1 , pages - ans  ));
-    }
-    return ret;
-}
-int main() { /// todo upsolve again and check the hard version
+int main() {
     smile();
-    cin >> n >> m ;
-    clr(dp , -1);
+    int n ; cin >> n ;
+    string s , l ;
+    while(n-- ){
+        vector<int> mvec;
+        cin >>s>> l ;
+        int carry =0 , i = 0  ;
+        for(; i < min(s.size() , l.size()) ; ++i){
+            mvec.push_back((s[i] - '0' + l[i] - '0' + carry)%10);
+            carry = (s[i] -'0' + l[i]  - '0'+ carry)/10;
+        }
+        if(s.size() > l.size())
+            swap( l ,s);
+        lp(j,i , l.size()){
+            mvec.push_back((l[j] - '0'+ carry)%10 );
+            carry = (l[j] - '0' + carry)/10 ;
+        }
+        if(carry)
+            mvec.push_back(carry);
+        bool first  = 1;
+        for(auto it : mvec){
+            if(first && it == 0 )continue;
+            else if(first && it != 0 ) cout<<it, first = 0 ;
+            else cout<<it;
+        }
+        cout<<endl;
+    }
 
-    inN(arr ,n );
-    sort(arr , arr+ n  , greater<int>());
-    int ret= solve(0 , m );
-    if(ret <=n)
-        cout<<ret;
-    else
-        cout<<-1;
+
+
+
 }
-

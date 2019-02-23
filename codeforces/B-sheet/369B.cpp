@@ -1,9 +1,8 @@
-/*
- * accepted
-   D1 - #540 (Div. 3) - live
+/**
 
-  19/02/19
-  by ahmed_drawy
+  369B - sheet B
+  14/02/19
+  by -ahmed_drawy
 
 
 
@@ -11,8 +10,6 @@
 
 #include <bits/stdc++.h>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 using namespace std;
 //#define push_bac                pb;
 //#define make_pair               mp;
@@ -64,47 +61,24 @@ void smile(){
     cout.tie(NULL);
 #ifndef ONLINE_JUDGE
     freopen("/home/www/Desktop/training/in.txt", "r" , stdin);
-//    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
+    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 
 
 }
-
-int n , m ;
-int dp[101][10005];
-int arr[101];
-int solve(int indx , int pages   ){
-//    cout<<indx << " "<<pages<<endl;
-    if(pages <= 0 )
-        return 0;
-    if(indx == n ){
-        if(pages <= 0 )
-            return 0;
-        else
-            return 1001;
-    }
-//    int & ret =dp[indx][pages];
-    if(~ret )return  ret ;
-    int ret = 1001;
-    int ans = 0 ;
-
-    for(int i = 0 , j = indx ; j<n ; ++i , ++j){
-        ans +=max(0,  arr[j] - i );
-        ret = min(ret ,1+ solve(j+1 , pages - ans  ));
-    }
-    return ret;
-}
-int main() { /// todo upsolve again and check the hard version
+int main(){ /// todo
     smile();
-    cin >> n >> m ;
-    clr(dp , -1);
 
-    inN(arr ,n );
-    sort(arr , arr+ n  , greater<int>());
-    int ret= solve(0 , m );
-    if(ret <=n)
-        cout<<ret;
-    else
-        cout<<-1;
+    int n , k , l , r, sk,sall; cin>>n>>k>> l >> r>>sall>>sk;
+    int remi = sk%k;
+    lp(i,0,k){
+        cout<<sk/k +(remi> 0 ) <<" " , remi--;
+    }
+    int rem = sall - sk ;
+    if(n-k > 0 )        /// imp check if the mod is not equal to zero to avoid the runtime error
+        remi = rem %(n-k);
+    lp(i,0,n-k)
+        cout<<rem/(n-k) + (remi>0)<<" ",remi--;
+
+
 }
-
