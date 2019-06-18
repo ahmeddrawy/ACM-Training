@@ -1,6 +1,6 @@
-/*
-  492C -sheet B - greedy
-  25/02/19
+/* not done
+  979B - sheet B
+  26/02/19
   by ahmed_drawy
 
 
@@ -54,35 +54,66 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+void update(int &a , int n , int sz  ){
+    int temp = n ;
+    int temp2 =min(temp , sz - a);
+    a+= temp2; /// the first move
+    temp-=temp2;
+    while(temp >0){
+        if(a < sz){
+            int u = min(temp , sz -a );
+            a+=u;
+            temp -=u;
+        }
+        else {
+            if(temp > 1) {
+                a = sz;
+                temp = 0;
+                return ;
+            }
+            else {
+                a-=1;
+                return;
+            }
+        }
+    }
+}
 
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    ll n ; cin >> n ;
+    string kero , shero , katie;
+    cin >> kero >>shero >> katie;
+    vector<int  > a1(1000);
+    vector<int  > a2(1000);
+    vector<int  > a3(1000);
+    lp(i,0,shero.size()){
+        a1[kero[i]]++;
+        a2[shero[i]]++;
+        a3[katie[i]]++;
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
+    sort(a1.rbegin() , a1.rend());
+    sort(a2.rbegin() , a2.rend());
+    sort(a3.rbegin() , a3.rend());
+    ll sz = kero.size();
+    auto it1 = a1[0] ;
+    auto it2 = a2[0];
+    auto it3 = a3[0] ;
+    update(it1 , n , sz);
+    update(it2, n , sz);
+    update(it3 , n , sz);
+    auto mx = max(it1 , it2 );
+    mx = max(mx , it3);
+    if(mx > it1 && mx >it2){
+        cout<<"Katie";
     }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
+    else if(mx >it1 && mx > it3){
+        cout<<"Shiro";
     }
-    cout<<ret;
-
-
+    else if(mx > it2 && mx >it3){
+        cout<<"Kuro";
+    }
+    else {
+        cout<<"Draw";
+    }
 }

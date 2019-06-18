@@ -1,5 +1,6 @@
 /*
-  492C -sheet B - greedy
+  416C  - sheet B - greedy
+
   25/02/19
   by ahmed_drawy
 
@@ -54,35 +55,44 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
-
+/// we have to give the  largest iincome for the smallest table possible
+int arr[1001];
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    int n ;cin >> n ;
+    vector< pii >mvec(n);
+    vector< pii >ret;
+    map<pii ,queue<int > > imap;
+    lp(i,0,n){
+        int x , y ; cin >> x >>y;
+        mvec[i] ={y, x};
+        imap[{y,x}].push(i+1);
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
+    sort(mvec.rbegin() , mvec.rend() , sortpair); /// sorting the pair ascending according to first and descending according to second
 
+    int k ; cin >> k ;
+    ll ans = 0 ;
+    int cnt = 0;
+    inN(arr , k );
+    lp(i,0, n){
+        int mn = INT_MAX , indx = -1  ;
+        lp(j, 0, k){ /// sequential search due to low constraints
+            if(mn >= arr[j]  && arr[j]>= mvec[i].second){ /// todo check the mapping of indx don;t have collisions due to repeated pairs
+                mn = arr[j];
+                indx = j ;
+            }
+        }
+        if(indx != -1) {
+            cnt++ ;
+            ret.push_back({imap[mvec[i]].front() , indx +1 }) ;
+            imap[mvec[i]].pop();
+            ans += mvec[i].first;
+            arr[indx]= 0 ;
+        }
     }
-    cout<<ret;
-
+    cout<<cnt << " "<<ans <<endl;
+    for(auto it : ret ){
+        cout << it.first << " "<<it.second <<endl;
+    }
 
 }

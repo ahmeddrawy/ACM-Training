@@ -1,6 +1,5 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
+     #552 (Div. 3)- D
   by ahmed_drawy
 
 
@@ -54,35 +53,48 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
-
+const int N = 200005;
+int arr[N];
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    int n , b ,a ; cin >> n >> b >> a ;
+    int mxCharge = a;
+    inN(arr , n);
+    int cnt = n ;
+    lp(i,0,n){
+        if(!a && !b ){
+            cnt = i ;
+            break;
+        }
+        if(arr[i] == 0 ){
+            if(a){
+                a--;
+            }
+            else if(b){
+                b--;
+            }
+            else{
+                cnt = i ;
+                break;
+            }
+        }
+        else {
+            if(b){
+
+                if(a < mxCharge)    /// if the accumlater less than max we use battery and recharege the accumlater
+                    b--,a++;
+                else
+                    a--;
+            }
+            else if(a)a--;
+            else  {
+                cnt = i ;
+                break;
+            }
+        }
+
 
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
-
+    cout<<cnt;
 }
+

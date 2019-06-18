@@ -1,7 +1,8 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+    summer 2019 - warm up sheet - B
+     by ahmed_drawy
+    gcd is altering the sign
+    gcd (-2, 2 ) = 2 , gcd (2, -2) = -2
 
 
 
@@ -32,10 +33,11 @@ using namespace std;
 #define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
 #define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
 #define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+#define inf 0x3f3f3f3f
 typedef long long               ll;
 typedef vector<int>             vi;
 typedef vector  <ll>            vll;
-typedef vector<vector<int> >    adj;
+//typedef vector<vector<int> >    adj;
 typedef pair<int ,int>          pii;
 const double EPS =1e-7;
 const int OO = 1e6;
@@ -54,35 +56,26 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+const long long modul = 1000000007;
+
+ll mod(ll x)
+{
+    return (x%modul + modul)%modul;
+}
 
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
-    }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
+    int n , x , y ,a, b ; cin >> n>> x >> y ;
+    set <pii >mset;
     lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
+        cin >> a >> b;
+        int num   = y - b ;
+        int denum   = x - a ;
+        mset.insert({num / __gcd(num , denum) , denum /__gcd(num , denum)});
 
     }
-    cout<<ret;
+    cout<<mset.size();
 
 
 }
+

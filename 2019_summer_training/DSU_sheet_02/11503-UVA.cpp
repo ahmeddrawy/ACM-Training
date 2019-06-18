@@ -1,7 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+    summer 2019 - DSU sheet - 11503 UVA
+     by ahmed_drawy
+
 
 
 
@@ -32,10 +32,11 @@ using namespace std;
 #define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
 #define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
 #define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+#define inf 0x3f3f3f3f
 typedef long long               ll;
 typedef vector<int>             vi;
 typedef vector  <ll>            vll;
-typedef vector<vector<int> >    adj;
+//typedef vector<vector<int> >    adj;
 typedef pair<int ,int>          pii;
 const double EPS =1e-7;
 const int OO = 1e6;
@@ -51,38 +52,67 @@ void smile() {
     cout.tie(NULL);
 #ifndef ONLINE_JUDGE
     freopen("/home/www/Desktop/training/in.txt", "r", stdin);
-//    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
+    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+const long long modul = 1000000007;
 
+ll mod(ll x)
+{
+    return (x%modul + modul)%modul;
+}
+
+
+const int N = 100001;
+
+int par[N] , rnk[N] ;
+//bool CanTalk[N];
+
+
+int findPar(int x){
+    if(par[x] ==x){
+        return x;
+    }
+    par[x] = findPar(par[x]);
+    return par[x];
+}
+
+
+void merge(int x , int y ){
+    x = findPar(x);
+    y = findPar(y);
+    if (x != y) {
+        if (rnk[x] < rnk[y])
+            swap(x, y);
+        par[y] = x;
+        rnk[x]+=rnk[y];
+    }
+}
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    int t; cin >>t;
+    while (t--){
+        map<string , int > indxMap;
+        int f ;
+        cin >> f;
+        for(int i = 0 , j = 1; i < f ; ++i){
+            string s1 , s2 ; cin>>s1>>s2;
+            if(indxMap[s1] == 0 ){
+                indxMap[s1] =j;
+                par[j] = j;
+                rnk[j] = 1;
+                j++;
+            }
+            if(indxMap[s2]== 0 ){
+                indxMap[s2] =j;
+                par[j] = j;
+                rnk[j] = 1;
+                j++;
+            }
+            merge(indxMap[s1] , indxMap[s2]);
+            cout<<rnk[findPar(indxMap[s1])]<<endl;
 
+
+        }
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
-
 }

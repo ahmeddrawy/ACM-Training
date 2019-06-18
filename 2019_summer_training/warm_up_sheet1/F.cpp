@@ -1,7 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+    summer 2019 - warm up sheet - F
+     by ahmed_drawy
+
 
 
 
@@ -32,10 +32,11 @@ using namespace std;
 #define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
 #define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
 #define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+#define inf 0x3f3f3f3f
 typedef long long               ll;
 typedef vector<int>             vi;
 typedef vector  <ll>            vll;
-typedef vector<vector<int> >    adj;
+//typedef vector<vector<int> >    adj;
 typedef pair<int ,int>          pii;
 const double EPS =1e-7;
 const int OO = 1e6;
@@ -54,35 +55,33 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+const long long modul = 1000000007;
+
+ll mod(ll x)
+{
+    return (x%modul + modul)%modul;
+}
+bool fact(ll x ){
+    while(x){
+        ll ret = x%10;
+        x/=10;
+        if(ret == 8)return 1;
+    }
+    return 0 ;
+
+
+}
 
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    int a;
+    cin >> a;
+    int temp = a;
+    lp(i, 1, 20) { /// max +ve is 15 in case -7 , since 8 occurs every 10
+        temp++;
+        if (fact(abs(temp))) {
+            cout << i;
+            return 0;
+        }
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
-
 }

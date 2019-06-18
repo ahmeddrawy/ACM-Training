@@ -1,6 +1,5 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
+     #552 (Div. 3)- B
   by ahmed_drawy
 
 
@@ -54,35 +53,44 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
-
+const int N = 101;
+int arr[N];
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    int n ; cin >> n ;
+    inN(arr, n);
+    sort(arr , arr+n );
+    int cnt = 0 ;
+    int mn = arr[0] ,mx =arr[n-1];
+    int avg = -1 ;
+    set<int>mset;
+    lp(i,0, n){
+        mset.insert(arr[i]);
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
+    if(mset.size() >3){ /// we can't have more than 3 values and make the array all equal by adding and subtracting of leaving without change
+        cout<<-1;
+        return  0 ;
     }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
+    if(mset.size()>2)
+        avg = *(++mset.begin()); /// getting the middle value
+    int diff = mx  - mn;
+    if(avg == -1){
 
+        if(diff &1){
+            cout<<diff;
+        }
+        else{
+            cout<<diff/2;
+        }
     }
-    cout<<ret;
+    else {
 
-
+        if(diff %2 ==0 && (mn +(diff/2) == mx -(diff/2) )&& mn +diff/2 == avg ){
+            cout<<diff/2;
+        }
+        else {
+            cout<<-1;
+        }
+    }
 }
+

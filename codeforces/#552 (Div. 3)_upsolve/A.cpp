@@ -1,7 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+     #552 (Div. 3)- A
+     AC
+    by ahmed_drawy
 
 
 
@@ -54,35 +54,15 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
-
+int arr[5];
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
-    }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
+    inN(arr, 4);
+    sort(arr , arr+4);
+    int b = arr[3] - arr[1];
+    int a = arr[3] - arr[2] ;
+    int c = arr[3] - arr[0] ;
+    cout<<a<<" "<<b<< " "<<c;
 
 }
+

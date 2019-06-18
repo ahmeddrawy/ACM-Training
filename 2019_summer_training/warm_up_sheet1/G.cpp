@@ -1,7 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+    summer 2019 - warm up sheet - F
+     by ahmed_drawy
+
 
 
 
@@ -32,10 +32,11 @@ using namespace std;
 #define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
 #define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
 #define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+#define inf 0x3f3f3f3f
 typedef long long               ll;
 typedef vector<int>             vi;
 typedef vector  <ll>            vll;
-typedef vector<vector<int> >    adj;
+//typedef vector<vector<int> >    adj;
 typedef pair<int ,int>          pii;
 const double EPS =1e-7;
 const int OO = 1e6;
@@ -54,35 +55,56 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+const long long modul = 1000000007;
+
+ll mod(ll x)
+{
+    return (x%modul + modul)%modul;
+}
+
 
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    int n ; cin >> n ;
+    int k ; cin >> k;
+    queue<int > p1;
+    queue<int > p2;
+    lp(i,0,k){
+        int temp ; cin >>temp ;
+        p1.push(temp);
+    }
+    cin >> k ;
+    lp(i,0,k){
+        int temp ; cin >>temp ;
+        p2.push(temp);
+    }
+    int cnt = 0 ;
+    set  <pii> mset;
+    while(true){
+        if(p1.empty()){
+
+            cout<<cnt << " 2";
+            return  0 ;
+        }
+        else if(p2.empty()){
+            cout<<cnt<<" 1";
+            return  0 ;
+        }
+        else if(cnt > 1e5){
+            cout<<-1;
+            return 0;
+        }
+        cnt++;
+        int x = p1.front();  p1.pop();
+        int y = p2.front();  p2.pop();
+        if(x>y){
+            p1.push(y);
+            p1.push(x);
+        }
+        else {
+            p2.push(x);
+            p2.push(y);
+        }
 
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
-
 }

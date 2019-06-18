@@ -1,6 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
+  435 B - sheet B - greedy
+
+  24/02/19
   by ahmed_drawy
 
 
@@ -10,8 +11,8 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
 using namespace std;
-
-#define make_pair               mp;
+//#define push_bac                pb;
+//#define make_pair               mp;
 #define lp(i,start , end)       for(int i = start ; i<end ; ++i)
 #define lllp(i,start , end)       for(ll i = start ; i<end ; ++i)
 #define inN(arr ,  n) for(int i = 0 ; i< n ; ++i)  cin>>arr[i];
@@ -45,44 +46,48 @@ bool sortpair( const pair<int , int> & x, const pair<int , int> & y){
 int dcomp(double x , double y){
     return fabs(x-y) <= EPS? 0: x>y?1:-1;
 }
-void smile() {
+void smile(){
     ios_base::sync_with_stdio(0);
     cin.tie(NULL);
     cout.tie(NULL);
 #ifndef ONLINE_JUDGE
-    freopen("/home/www/Desktop/training/in.txt", "r", stdin);
+    freopen("/home/www/Desktop/training/in.txt", "r" , stdin);
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
-}
 
+
+}
+vector<char> mset;
+void updated (string &ss , int indx  , int st ){
+    string temp = ss;
+    lp(i,st , indx ){
+        temp[i+1 ] = ss[i];
+    }
+    temp[st] = ss[indx];
+    ss= temp ;
+}
+/// you have to change the left most first and find the max change possible
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    string s ; cin >> s;
+    int sz = s.size();
+
+    int k ; cin >> k ;
+    lp(i,0,sz){
+        char mn =s[i];
+        int indx = i ;
+        lp(j,i+1 , min(i+k+1 , sz)){
+            if(s[j]>mn){
+                indx = j ;
+                mn = s[j];
+            }
+        }
+        if(indx == i) continue;
+        else {
+            updated(s , indx , i );
+            k-=(indx- i);
+        }
 
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
-
+    cout<<s ;
 }

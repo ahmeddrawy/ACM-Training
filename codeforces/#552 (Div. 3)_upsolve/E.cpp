@@ -1,6 +1,5 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
+     #552 (Div. 3)- C
   by ahmed_drawy
 
 
@@ -54,35 +53,71 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+struct compareIterator{
+    bool operator()(pair<int ,list<pair<int , int> >::iterator > &x , pair<int ,list<pair<int , int> >::iterator > &y){
+        return x.first <y.first;
 
+    }
+
+};
+
+
+priority_queue < pair<int ,list<pair<int , int> >::iterator >, vector<pair<int ,list<pair<int , int> >::iterator > >, compareIterator > mq;
+list<pair<int , int> >mlst;/// first in the list is redundant and can be removed
+int arr[200005];
+bool visited[200005];
+list<pair<int , int> >::iterator solve(){
+    while (true){
+        if(mq.empty())break;
+        auto curr = mq.top();
+        if(!visited[curr.first]){
+
+            return curr.second  ;
+        }
+        mq.pop();
+    }
+    return mlst.end();
+
+}
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    int n , k ; cin >> n>>k ;
+    lp(i,0,n){
+        cin>>arr[i];
+        mlst.push_back({arr[i],i});
+        auto it = mlst.end();
+        --it;
+        mq.push({arr[i], it});
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
+    vector<int> mvec(n);
+    int turn = 0;
+    int finished =  0;
+    while (true){
+        turn %=2;turn++;
+        auto indx = solve();    /// iterator to top
+        if(indx == mlst.end() )break;
+        int cnt = k ;
+        auto it = indx;
+        ++it;
+        visited[indx->first] =1;
+        mvec[indx->second] = turn;
+        for (; it !=mlst.end() && cnt>0;cnt-- ) {
+            mvec[it->second] = turn;
+            visited[it->first] = 1;
+            it = mlst.erase(it);
+        }
+        cnt = k;
+        it = indx;
+        for(;cnt>0 ;cnt-- ){
+            auto temp = indx;
+            if(temp == mlst.begin())break;
+            --temp;
+            mvec[temp->second] = turn;
+            visited[temp->first] = 1;
+            mlst.erase(temp);
+        }
+        mlst.erase(indx);
     }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
+    lp(i,0,n)cout<<mvec[i];
 
 }

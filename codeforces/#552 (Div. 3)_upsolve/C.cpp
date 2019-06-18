@@ -1,6 +1,5 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
+     #552 (Div. 3)- C
   by ahmed_drawy
 
 
@@ -57,32 +56,48 @@ void smile() {
 
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    int a , b, c ;cin>>a>>b>>c;
+    int weeks = INT_MAX;
+    weeks = min(weeks , a/3);
+    weeks = min(weeks , b/2);
+    weeks = min(weeks , c/2);
+    a -=  3*weeks;
+    b -= 2*weeks;
+    c -= 2*weeks;
+    int ans = 0 ;
+    lp(i,0,7){
+        int ta = a;
+        int tb = b;
+        int tc = c;
+        int cnt = 0 ;
+        /// starting from j = i to start from diff week day and loop on it
+        for(int j = i ; j <1000*7 ; ++j){     /// 1000 just in case , but it should break inside in the first weeks
+            int day = j%7;
+            if(day == 0 ||day == 3) {
+                if(tb)
+                    tb--,cnt++;
+                else break;
+
+            }
+            if(day == 1 ||day == 2 ||  day ==5) {
+                if(ta)
+                    ta--,cnt++;
+                else break;
+            }
+            if(day == 4 ||day == 6) {
+                if(tc)
+                    tc--,cnt++;
+                else
+                    break;
+            }
+
+
+        }
+        ans  =max(ans , cnt);
 
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
 
-    }
-    cout<<ret;
-
+    cout<<ans + weeks *7;
 
 }
+

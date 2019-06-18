@@ -1,6 +1,6 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
+  608B - sheet B
+  01/03/19
   by ahmed_drawy
 
 
@@ -55,34 +55,33 @@ void smile() {
 #endif // ONLINE_JUDGE
 }
 
+int zeros[200005];
+int ones[200005];
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    string s1 , s2 ; cin >> s1 >> s2;
+    int sz1 = s1.size();
+    int sz2 = s2.size();
+    lp(i,0,sz2){
+        if(s2[i] == '1')ones[i] =1;
+        else            zeros[i] =  1;
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
+    lp(i,1,sz2+1){
+        ones[i] +=ones[i-1];
+        zeros[i] += zeros[i-1];
     }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
+    ll ans = 0;
+    lp(i,0,sz1){
+        if(s1[i] == '1'){
+            ans += zeros[sz2 - (sz1 - i) ] ;
+            if(i)
+                ans-= zeros[i-1];
+        }
+        else {
+            ans +=ones[sz2 - (sz1 - i )  ];
+            if(i)
+                ans-= ones[i-1];
+        }
     }
-    cout<<ret;
-
-
+    cout<<ans;
 }

@@ -27,6 +27,11 @@
         18.5 - power in log (p)
         18.6 - get the a^1 + a^2 + ... + a^n
         18.7 - intro to combinatrics from top coder
+    19 - reveresing the string  segment many times doesn't matter order of the reversing
+        we have to mark the frq array with the reverses and make the swapping for the odd ones only
+        the even ones returned to its place again
+    20 -  Disjkstra using priority queue - written by SISI
+
 */
 
 ///     1-    code to remove all not alpha chars from a string and transform to lower
@@ -422,3 +427,52 @@ do {
 
 }
 while(next_permutation(mvec.begin() , mvec.end()));
+
+
+///         20 - dijkstra
+const int N = 2e5;
+
+vector<pair<int , int> > adj[N];
+int dis[N];
+
+void pre(){
+    memset(dis , inf , sizeof dis);
+}
+
+void Dijkstra(int s){
+    priority_queue<pair<int , int> , vector<pair<int , int> > , greater<pair<int , int> > > pq;
+    dis[s] = 0;
+    pq.push({0 , s});
+
+    while(!pq.empty()){
+        auto top = pq.top();pq.pop();
+
+        if(top.first > dis[top.second])continue;
+
+        for(auto child : adj[top.second]){
+
+            if(dis[child.first] > dis[top.second] + child.second){
+                dis[child.first] = dis[top.second] + child.second;
+                pq.push({dis[child.first] , child.first});
+            }
+        }
+    }
+}
+/// factorizing
+set<int > factorize (int x){
+    set<int > ret;
+    ret.insert(1);
+    ret.insert(x);
+    for (int i = 2; i*i <=x ; ++i) {
+        if(x%i ==0 ){
+            ret.insert(i);
+            ret.insert(x/i);
+        }
+    }
+    return ret;
+
+}
+/// distance between two points
+double  dist(int x1 , int y1  , int x2 , int y2){
+    return sqrt(pow(x2 -x1 , 2) +  pow(y2 -y1 , 2)  );
+}

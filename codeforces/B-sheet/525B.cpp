@@ -1,17 +1,18 @@
-/*
-  492C -sheet B - greedy
-  25/02/19
+/**imp
+  525 B - sheet B - greedy
+
+  24/02/19
   by ahmed_drawy
 
-
+   we can optimize the solution by marking the beginings only
 
 */
 #include <bits/stdc++.h>
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
 using namespace std;
-
-#define make_pair               mp;
+//#define push_bac                pb;
+//#define make_pair               mp;
 #define lp(i,start , end)       for(int i = start ; i<end ; ++i)
 #define lllp(i,start , end)       for(ll i = start ; i<end ; ++i)
 #define inN(arr ,  n) for(int i = 0 ; i< n ; ++i)  cin>>arr[i];
@@ -55,34 +56,50 @@ void smile() {
 #endif // ONLINE_JUDGE
 }
 
+int frq[200005];
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    string s ; cin >> s;
+    int m ; cin >> m;
+    int sz = s.size();
+    vector<int >mvec(m);
+    map  <int ,int> mmap ;
+    lp(i,0,m){
+        cin>>mvec[i];
+        frq[s.begin() +mvec[i] -1  -s.begin()]+=1;
+        frq[s.begin()+sz- mvec[i] +1 -s.begin()]-=1;
+        mmap[mvec[i]]++;
+//        reverse( s.begin() +mvec[i] -1 ,  s.begin()+sz- mvec[i] +1); /// the end iterator is exclusive
+    }
+    /// marking the frq array with the segment that is reversed
+    /// todo we need to check a way to get the minimum reverses possible
+    lp(i,1,sz ){
+        frq[i] +=frq[i-1];
 
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
+
+    cout <<endl;
+    lp(i,0, sz){
+        frq[i]%=2;
     }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
 
+    /// we swap the right most one with the left most one because this mean that this segment is swapped at least one time
+    /// and repeat
+    for(int i  = 0 , j = sz- 1 ; i < sz && j>i  ;  ){
+        if(frq[i] && frq[j] && i!=j){
+            swap(s[i]  , s[j]);
+            ++i , --j;
+        }
+        else if(frq[i] && !frq[j]){
+            --j;
+        }
+        else if(frq[j] && !frq[i]){
+            ++i;
+        }
+        else {
+            ++i , --j;
+        }
     }
-    cout<<ret;
 
-
+    cout<<s;
 }

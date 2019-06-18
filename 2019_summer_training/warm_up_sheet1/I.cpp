@@ -1,7 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+    summer 2019 - warm up sheet - I
+     by ahmed_drawy
+
 
 
 
@@ -32,10 +32,11 @@ using namespace std;
 #define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
 #define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
 #define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+#define inf 0x3f3f3f3f
 typedef long long               ll;
 typedef vector<int>             vi;
 typedef vector  <ll>            vll;
-typedef vector<vector<int> >    adj;
+//typedef vector<vector<int> >    adj;
 typedef pair<int ,int>          pii;
 const double EPS =1e-7;
 const int OO = 1e6;
@@ -54,35 +55,65 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+const long long modul = 1000000007;
 
+ll mod(ll x)
+{
+    return (x%modul + modul)%modul;
+}
+const int N = 1001;
+vector<int > g[N];
+vector<int > cost(N);
+bool removed[N];
+int calcost(int indx ){
+    int res = 0 ;
+    for(auto it : g[indx]){
+        res += !removed[it] * cost[it];     /// calcc if not removed
+    }
+    return res;
+}
+void markREMOVED(int indx){
+    removed[indx] =1;
+}
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
+    int n , m ; cin >> n >> m ;
+    map<int ,int >frq;
+    lp(i,0,n){
+        cin >>cost[i];
+    }
+    lp(i,0,m){
+        int x , y ; cin >> x >> y;
+        --x ,--y;
+        g[x].push_back(y);
+        g[y].push_back(x);
+        frq[x]++;
+        frq[y]++;
+    }
+    vector<pair <int , int > > graph ;  /// cost and indx
+    lp(i,0,n){
+        graph.push_back({cost[i] ,i });
+    }
+    sort(graph.rbegin() , graph.rend());    /// remove the ones with the highest costs first , greedy approach ,
+    /// if you dont remove it you may have to pay it
+    ll ans = 0 ;
+    lp(i,0,n){
+        auto curr  = graph[i];
+        vector<pair<pair<int ,int> , int  > > res ; /// frq , cost
+        res.push_back({{frq[curr.second] ,cost[curr.second] }, curr.second});
+        while(true){        /// take all the nodes with the same cost and remove the one with the highest frq first
+            if(graph[i+1] == curr){
+                res.push_back({{frq[graph[i+1].second] ,cost[graph[i+1].second] } , graph[i+1].second }) ;
+                ++i;
+            }
+            else break;
+        }
+        sort(res.rbegin() , res.rend());
+        lp(j,0,res.size() ){
+            ans += calcost(res[j].second);
+            markREMOVED(res[j].second);
+        }
 
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
-
-    }
-    cout<<ret;
-
-
+    cout<<ans;
 }

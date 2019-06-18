@@ -1,7 +1,7 @@
 /*
-  492C -sheet B - greedy
-  25/02/19
-  by ahmed_drawy
+    summer 2019 - DSU sheet - 25D
+     by ahmed_drawy
+
 
 
 
@@ -32,10 +32,11 @@ using namespace std;
 #define turnOnLastZero(S) ((S) | (S + 1))       //turn on last unset bit from right
 #define turnOffLastConsecutiveBits(S) ((S) & (S + 1))
 #define turnOnLastConsecutiveZeroes(S) ((S) | (S - 1))
+#define inf 0x3f3f3f3f
 typedef long long               ll;
 typedef vector<int>             vi;
 typedef vector  <ll>            vll;
-typedef vector<vector<int> >    adj;
+//typedef vector<vector<int> >    adj;
 typedef pair<int ,int>          pii;
 const double EPS =1e-7;
 const int OO = 1e6;
@@ -54,35 +55,76 @@ void smile() {
 //    freopen("/home/www/Desktop/training/out.txt" , "w" , stdout);
 #endif // ONLINE_JUDGE
 }
+const long long modul = 1000000007;
+
+ll mod(ll x)
+{
+    return (x%modul + modul)%modul;
+}
+
+
+const int N = 1001;
+
+int par[N] , rnk[N] ;
+
+int findPar(int x){
+    if(par[x] ==x){
+        return x;
+    }
+    par[x] = findPar(par[x]);
+    return par[x];
+}
+
+void merge(int x , int y ){
+    x = findPar(x);
+    y = findPar(y);
+    if (x != y) {
+        if (rnk[x] < rnk[y])
+            swap(x, y);
+        par[y] = x;
+        if (rnk[x] == rnk[y])
+            rnk[x]++;
+    }
+}
+struct ans{
+    int X , Y , U , V;
+    ans(int x , int y , int u , int v){
+        X = x , Y = y , U=u , V=v;
+    }
+
+};
 
 int main() {
     smile();
-    ll  n , r ;
-    ll avg;
-    cin >> n >>r >> avg;
-    vector <pii> mvec(n);
-    ll sum = 0 ;
-    lp(i,0, n ){
-        int A , B ;
-        cin >>A>> B;
-        sum+=A;
-        mvec[i] = {B, A};
-
+    lp(i,0,N){
+        par[i] = i ;
+        rnk[i]= 0 ;
     }
-    if(sum >= n*avg){
-        cout<<0 ;
-        return 0;
-    }
-    sort(mvec.begin() , mvec.end());
-    ll ret= 0 ;
-    lp(i,0,n ){
-        auto a =min(n*avg -sum , r-mvec[i].second); /// calcualting the min point we have to calcualte and then we have to calcualate the cost of it
-        sum+=a;
-        ret+=a*mvec[i].first;
-        if(sum >= n*avg )     break;
+    int n ; cin >> n ;
 
+    vector<pii> removed;
+    lp(i,0,n-1){
+        int x ,  y; cin >> x >>  y;
+        if(findPar(x ) == findPar(y)){
+            removed.push_back({x,y});
+        }
+        else
+            merge(x , y);
     }
-    cout<<ret;
-
+    vector<ans>anss ;
+    int  k = 0 ;
+    lp(i,2,n+1){
+        if(findPar(i)!= findPar(1)){
+            ans t(removed[k].first , removed[k].second , findPar(i), findPar(1));
+            anss.push_back(t);
+            k++;
+            merge(i , 1 );
+        }
+    }
+    cout<<anss.size()<<endl;
+    lp(i,0,anss.size()){
+        cout<<anss[i].X<<" "<<anss[i].Y<<" "<<anss[i].U<<" "<<anss[i].V<<endl;
+    }
+    return  0;
 
 }
