@@ -122,6 +122,7 @@ const int N = 1e6 + 5, MOD = 1e9 + 7;
 int factor[N];
 int sieve() {
 	for (int i = 2; i * i < N; ++i) {
+	for (int i = 2; i * i < N; ++i) {
 		if (factor[i])
 			continue;
 		for (int j = i * i; j < N; j += i)
@@ -475,4 +476,201 @@ set<int > factorize (int x){
 /// distance between two points
 double  dist(int x1 , int y1  , int x2 , int y2){
     return sqrt(pow(x2 -x1 , 2) +  pow(y2 -y1 , 2)  );
+}
+/// kadane 1D and 2D
+int kadane(int &l , int &r , int arr[] , int n ){
+    int mx = INT_MIN ,  ll = 0 , curr = 0 ;
+    r = -1;
+    for (int i = 0; i <n ; ++i) {
+        curr += arr[i];
+        if(curr < 0 ){
+            curr = 0 ;
+            ll = i+1 ;
+        }
+        else {
+            if(mx < curr){
+                mx = curr ;
+                l = ll ;
+                r= i ;
+            }
+        }
+    }
+    if(r == -1) {
+        mx = arr[0];
+        lp(i, 0, n) {
+            if (arr[i] >= mx) {
+                l = r = i;
+                mx = arr[i];
+            }
+        }
+    }
+    return mx ;
+
+
+}
+int n;
+int kadane2D(int arr[][n] ){
+    int mx = INT_MIN , l = 0 , r = 0  , u = 0 , d = 0;
+    for (int left = 0; left < n  ; ++left) {
+        int temp[n];
+        for (int right = 0; right < n; ++right) {
+            for (int i = 0; i <n ; ++i) {   /// row
+                temp[i] +=arr[i][right];
+            }
+            int ll, rr ;
+            int ret = kadane(ll , rr ,temp, n);
+            if(ret >= mx ){
+                mx = ret ;
+//                l = left , r = right ;
+//                u = ll , d = rr ;
+            }
+        }
+    }
+
+
+}
+
+
+/// nCr
+const int N = 100;
+ll factor[N];
+/**
+ * power in O(log p)
+ * 10^16 = 10^8 * 10^8
+ * 10^17 = 10^8 * 10^8 * 10
+ */
+ll power (ll b , int p ){
+    if(p == 0 )return  1;
+    int sq = pow(b , p/2);
+    sq *=sq;
+
+    if(p&1 )sq *=b; /// if odd
+
+    return  sq ;
+
+}
+void sieve() {
+    for (ll i = 2; i * i < N; ++i) {
+        if (factor[i])
+            continue;
+        for (ll j = i * i; j < N; j += i)
+            factor[j] = i;
+    }
+}
+void factorize(ll x , map<ll , int > & mmap) {
+
+    while (x > 1) {
+        if (factor[x] == 0)
+            factor[x] = x;
+        mmap[factor[x]]++;
+
+        x /= factor[x];
+    }
+
+}
+void ncr(ll x, ll n , map<ll , int > &upmap, map<ll , int > &downmap ){
+    for (ll i = n; i >0 ; --i) {    /// n!
+        factorize(i , upmap);
+    }
+    for (ll i = x; i >0 ; --i) {    /// x!
+        factorize(i ,downmap);
+    }
+    for (ll i = n-x; i >0 ; --i) {    ///( n-x)!
+        factorize(i ,downmap);
+    }
+}
+void avoidoverflowutility(map<ll , int > &upmap, map<ll , int > &downmap){
+    for (auto it = upmap.begin() ; it!=upmap.end() ; ++it){
+        if(downmap[it->first]){
+            if(upmap[it->first]<=downmap[it->first]){
+                downmap[it->first] -= it->second    ;
+                it->second = 0;
+            }
+            else {
+                it->second -=downmap[it->first];
+                downmap[it->first] = 0 ;
+            }
+
+        }
+
+    }
+}
+ll solve (map<ll , int > &upmap, map<ll , int > &downmap){
+    ll num = 1 , denum  = 1;
+    avoidoverflowutility(upmap , downmap);
+    for( auto it : upmap)
+        num *= power(it.first , it.second);
+    for( auto it : downmap)
+        denum *=power(it.first , it.second);
+    return num/denum;
+
+} ///from geeks for geeks nCr
+ll binomialCoeff(int n, int k)
+{
+    ll res = 1;
+
+    // Since C(n, k) = C(n, n-k)
+    if ( k > n - k )
+        k = n - k;
+
+    // Calculate value of
+    // [n * (n-1) *---* (n-k+1)] / [k * (k-1) *----* 1]
+    for (int i = 0; i < k; ++i)
+    {
+        res *= (n - i);
+        res /= (i + 1);
+    }
+
+    return res;
+}
+////    nCr  C(n, k) = C(n-1, k-1) + C(n-1, k)
+long long ncr[35][35];
+long long NCR(int n,int r)
+{
+    if (n<r)return 0;
+    if (r==0)return 1;
+    if (ncr[n][r]!=-1)return ncr[n][r];
+    return ncr[n][r]=NCR(n-1,r-1)+NCR(n-1,r);
+}
+ll C[65][65];
+ll preC()
+{
+    for (int i = 0; i < 65; ++i)
+    {
+        C[i][0] = 1, C[i][i] = 1;
+        for (int j = 1; j < i; ++j)
+        {
+            C[i][j] = C[i-1][j-1] + C[i-1][j];
+        }
+    }
+}
+long long add(long long x, long long y)
+{
+    x += y;
+    while(x >= MOD)
+        x -= MOD;
+    while(x < 0)
+        x += MOD;
+    return x;
+}
+ll mod = 998244353;
+void add(long long &x, long long y){
+    x += y;
+    while(x >= mod)
+        x -= mod;
+    while(x < 0)
+        x += mod;
+//    return x;
+}
+ll multipy(ll x , ll y ){
+    return ((x%mod) *(y%mod))%mod;
+}
+
+ll fact [300005];
+void factorial(ll n ){
+    fact[0] = 1;
+    for (ll i = 1; i <=n ; ++i) {
+        fact[i] = multipy(fact[i-1] , i);
+    }
+
 }
