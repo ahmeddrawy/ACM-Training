@@ -121,7 +121,7 @@ T modpow(T base, T exp, T modulus) {
 const int N = 1e6 + 5, MOD = 1e9 + 7;
 int factor[N];
 int sieve() {
-	for (int i = 2; i * i < N; ++i) {
+
 	for (int i = 2; i * i < N; ++i) {
 		if (factor[i])
 			continue;
@@ -140,7 +140,40 @@ set<int> factorize(int x) {
 	}
 	return ret;
 }
+int count_primes(int n) {
+    const int S = 10000;
 
+    vector<int> primes;
+    int nsqrt = sqrt(n);
+    vector<char> is_prime(nsqrt + 1, true);
+    for (int i = 2; i <= nsqrt; i++) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (int j = i * i; j <= nsqrt; j += i)
+                is_prime[j] = false;
+        }
+    }
+
+    int result = 0;
+    vector<char> block(S);
+    for (int k = 0; k * S <= n; k++) {
+        fill(block.begin(), block.end(), true);
+        int start = k * S;
+        for (int p : primes) {
+            int start_idx = (start + p - 1) / p;
+            int j = max(start_idx, p) * p - start;
+            for (; j < S; j += p)
+                block[j] = false;
+        }
+        if (k == 0)
+            block[0] = block[1] = false;
+        for (int i = 0; i < S && start + i <= n; i++) {
+            if (block[i])
+                result++;
+        }
+    }
+    return result;
+}
 ///  7 -        modulo power
 long long power(long long base, int exp)
 {
@@ -543,6 +576,7 @@ ll power (ll b , int p ){
     if(p == 0 )return  1;
     int sq = pow(b , p/2);
     sq *=sq;
+    sq *=sq;
 
     if(p&1 )sq *=b; /// if odd
 
@@ -672,5 +706,494 @@ void factorial(ll n ){
     for (ll i = 1; i <=n ; ++i) {
         fact[i] = multipy(fact[i-1] , i);
     }
+
+}
+---
+/// extended eculids algo for gcd http://e-maxx.ru/algo/extended_euclid_algorithm
+/// can used to find one solution for linear Diophantine eq with 2 variables
+int gcd (int a, int b, int & x, int & y) {
+    if (a == 0) {
+        x = 0; y = 1;
+        return b;
+    }
+    int x1, y1;
+    int d = gcd (b%a, a, x1, y1);
+    x = y1 - (b / a) * x1;
+    y = x1;
+    return d;
+}
+bool find_any_solution(int a, int b, int c, int &x0, int &y0, int &g) {
+    g = gcd(abs(a), abs(b), x0, y0);
+    if (c % g) {
+        return false;
+    }
+
+    x0 *= c / g;
+    y0 *= c / g;
+    if (a < 0) x0 = -x0;
+    if (b < 0) y0 = -y0;
+    return true;
+}
+/// lcm to avoid overflow
+int lcm (int a, int b) {
+    return a / gcd(a, b) * b;
+}
+/// check cycles in directed graph
+    vector<pair<int , int> >g[5005];
+//bool visited[5005];
+    int parent[5005] ;
+    int cnt =0;
+    vector<int > path(5005);
+    void dfs(int x ){
+
+        parent[x] = 1;
+
+        for (auto it : g[x]){
+            auto v = it.first , indx = it.second;
+            if(parent[v] == 1){ /// node opened and not finished
+
+                cnt =1 ;
+                path[indx] = 2;
+            }
+            else if(parent[v]  == 0 ){
+                dfs(v);
+                path[indx] = 1;
+            }
+            else {/// visited before and finished
+                path[indx] = 1;
+            }
+        }
+        parent[x] = 2; ///finished and no cycle
+    }
+
+int parent[N] ;
+int cnt =0, mx = 0 ;
+void dfs(int x ) {
+
+    parent[x] = 1;
+
+    for (auto it : g[x]) {
+        auto v = it;
+        if (parent[v] == 0 || parent[v] == 2) {
+            cnt++;
+            dfs(v);
+//            cnt++;
+        }
+    }
+    parent[x] = 2; ///finished and no cycle
+    mx = max(cnt , mx);
+    cnt--;
+}
+----
+/// longest path in DAG
+int n , m;
+const int N = 1e5 +3;
+vector<int>g[N];
+int dp[N];
+int solve(int node ){
+    if(node == n)return 0;
+    int &ret = dp[node];
+    if(~ret)
+        return ret;
+    ret =0 ;
+    for(auto it : g[node]){
+        ret = max(ret , 1+ solve(it));
+    }
+
+    return ret;
+
+
+
+}
+clr(dp , -1);
+int ans = 0 ;
+for (int j = 0; j < n; ++j) {
+if(dp[j] ==-1)
+ans = max(ans , solve(j));
+}
+
+///This is a Linear Diophantine equation in two variables. As shown in the linked article,
+/// when gcd(a,m)=1, the equation has a solution which can be found using the extended Euclidean
+/// algorithm. Note that gcd(a,m)=1 is also the condition for the modular inverse to exist
+/// find modular inverse using extended euclidean
+int x, y;
+int g = extended_euclidean(a, m, x, y);
+if (g != 1) {
+cout << "No solution!";
+}
+else {
+x = (x % m + m) % m;
+cout << x << endl;
+}
+//The problem is the following: we want to compute the modular inverse for every number in the range [1,m−1].
+//Applying the algorithms described in the previous sections, we can obtain a solution with complexity O(mlogm).
+//Here we present a better algorithm with complexity O(m). However for this specific algorithm we require that the modulus m is prime.
+//We denote by inv[i] the modular inverse of i. Then for i>1 the following equation is valid:
+//inv[i]=−⌊mi⌋⋅inv[mmodi]modm
+
+inv[1] = 1;
+for(int i = 2; i < m; ++i)
+inv[i] = (m - (m/i) * inv[m%i] % m) % m;
+
+
+/// gauss -The function returns the number of solutions of the system (0,1,or ∞). If at least one solution exists, then it is returned in the vector ans
+int gauss (vector < vector<double> > a, vector<double> & ans) {
+    int n = (int) a.size();
+    int m = (int) a[0].size() - 1;
+
+    vector<int> where (m, -1);
+    for (int col=0, row=0; col<m && row<n; ++col) {
+        int sel = row;
+        for (int i=row; i<n; ++i)
+            if (abs (a[i][col]) > abs (a[sel][col]))
+                sel = i;
+        if (abs (a[sel][col]) < EPS)
+            continue;
+        for (int i=col; i<=m; ++i)
+            swap (a[sel][i], a[row][i]);
+        where[col] = row;
+
+        for (int i=0; i<n; ++i)
+            if (i != row) {
+                double c = a[i][col] / a[row][col];
+                for (int j=col; j<=m; ++j)
+                    a[i][j] -= a[row][j] * c;
+            }
+        ++row;
+    }
+
+    ans.assign (m, 0);
+    for (int i=0; i<m; ++i)
+        if (where[i] != -1)
+            ans[i] = a[where[i]][m] / a[where[i]][i];
+    for (int i=0; i<n; ++i) {
+        double sum = 0;
+        for (int j=0; j<m; ++j)
+            sum += ans[j] * a[i][j];
+        if (abs (sum - a[i][m]) > EPS)
+            return 0;
+    }
+
+    for (int i=0; i<m; ++i)
+        if (where[i] == -1)
+            return INF;
+    return 1;
+}
+/// matrix exponentiation
+void matrixMultiply (ll Matrix[2][2] , ll mid[2][2] ){
+    int res[2][2] = {{0,0 } , {0,0}};
+
+    for (int i = 0; i<2 ; ++i) {
+        for (int j = 0; j <2 ; ++j) {
+            for (int k = 0; k <2 ; ++k) {
+                res[i][j] = add(res[i][j],multipy( Matrix[i][k],mid[k][j]));
+            }
+        }
+    }
+    for (int l = 0; l <2 ; ++l) {
+        for (int i = 0; i < 2; ++i) {
+            Matrix[l][i] = res[l][i];
+        }
+    }
+//    return res;
+
+
+
+}
+
+void binpow( ll y[2][2],int b ) {
+    if(b== 0 || b==1) {
+        return  ;
+
+    }
+    binpow(y, b/2);
+//    matrixMultiply(y, y);
+//    vector<vector<ll >> y = binpow(b/2);
+    matrixMultiply(y , y);
+    if(b&1)
+        matrixMultiply(y , M);
+    return ;
+
+}
+/// to get distance from point by coordinates
+
+
+int dcmp(double x, double y) {	return fabs(x-y) <= EPS ? 0 : x < y ? -1 : 1;	}
+
+struct point{
+    double x,  y;
+    point (double _x  =0  , double _y  = 0 ) {
+        x = _x;
+        y = _y;
+
+    }
+
+};
+double slope(point & a , point&b ){
+
+    return (a.y - b.y)/(a.x - b.x);
+
+}
+double distance(point & a , point & b){
+    return sqrt((a.x - b.x)*(a.x - b.x) - (a.y-b.y)*(a.y-b.y));
+}
+bool online(point &a , point & b , point &c){
+    return dcmp( distance(a,c ) +distance(b,c) ,distance(a,b)) == 0 ;
+
+}
+point calcualtepoint(point & a , point &b , double distance){
+
+    if(a.x == b.x){
+        return point(a.x , a.y  + distance);
+    }
+    else if(a.y == b.y){
+        return point(a.x + distance , a.y  );
+    }
+    else {
+        double s = slope(a, b);
+        point fst(a.x , a.y);
+        point scd(a.x , a.y);
+        fst.x -=1.0*distance/sqrt((1+s*s));
+        scd.x +=1.0*distance/sqrt((1+s*s));
+        fst.y -=1.0*distance*s/sqrt(1+s*s);
+        scd.y +=1.0*distance*s/sqrt(1+s*s);
+        if(online(a,b ,scd))
+            return scd ;
+        return fst;
+    }
+
+}
+
+double areaBypoints(point&a , point &b , point&c){
+    return abs((a.x*(b.y - c.y) + b.x*(c.y - a.y) + c.x*(a.y - b.y))/2.0);
+
+}
+point another(point & a , point & b , double distance ){
+    double x = b.x- a.x;
+    double y = b.y- a.y;
+    double d=  sqrt((x)*(x) +( y)*( y) );
+    x/=d;
+    y/=d;
+    x*=distance;
+    y*=distance;
+    return point(x, y);
+//    return point((b.x- a.x)*distance/d , distance*(b.y-a.y)/d) ;
+}
+int main() {
+    smile();
+    point a , b ,c  ;
+    cin >>a.x >> a.y;
+    cin >>b.x >> b.y;
+    cin >>c.x >> c.y;
+//    cout<<areaBypoints( point(1,0), point(5,0) , point(6,6))<<endl;
+    int n ; cin >> n ;
+    vector<point> mvec1;
+    vector<point> mvec2;
+    vector<point> mvec3;
+    for (int i = 0; i <n ; ++i) {
+        double x ; cin >> x;
+        if(i == 0 || i == n-1)
+            mvec1.push_back(calcualtepoint(a,b,x));
+    }
+    cin >> n ;
+    for (int i = 0; i <n ; ++i) {
+        double x ; cin >> x;
+        if(i == 0 || i == n-1)
+            mvec1.push_back(calcualtepoint(b,c,x));
+    }
+    cin >> n ;
+    for (int i = 0; i <n ; ++i) {
+        double x ; cin >> x;
+        if(i == 0 || i == n-1)
+            mvec1.push_back(calcualtepoint(c,a,x));
+    }
+
+    double mx = 0 ;
+//    cout << areaBypoints(mvec2[0] , mvec1[0] ,mvec3[0] )<<endl;
+    for (int j = 0; j <sz(mvec1) ; ++j) {
+        for (int i = j+1; i <sz(mvec1) ; ++i) {
+            for (int k = i+1; k <sz(mvec1) ; ++k) {
+                if(i== j || i == k || j == k )continue;
+                auto p1 = mvec1[j];
+                auto p2 = mvec1[i];
+                auto p3 = mvec1[k];
+                double a = areaBypoints(p3, p1 , p2);
+                mx = max(mx , a);
+            }
+        }
+    }
+    cout<<fixed << setprecision(6) << mx << endl;
+    return  0 ;
+}
+
+///
+/// sparse table implementation
+const int N = 1e5 +5;
+const int lgN = 17;
+int memo[N][lgN];/// memo (i, j) contains the minimum element index in range starting from i with length 2^j
+int arr[N];
+void processSparseTable(){
+    for (int i = 0; i < N; ++i) {
+        memo[i][0] = i;
+    }
+    for (int j = 1; 1<<j <=N ; ++j) {
+        for (int i = 0; i + (1<<j) -1<N ; ++i) {
+            if(arr[memo[i][j-1]] <= arr[memo[i+(1<<(j-1))][j-1]]){
+                memo[i][j] =memo[i][j-1];
+            }
+            else{
+                memo[i][j]= memo[i+(1<<(j-1))][j-1];
+            }
+        }
+    }
+
+}
+int RMQ(int l , int r){
+    int len =(int)log2( r-l+1);
+    int length = 1<<len;
+    if (arr[memo[l][len]] <= arr[memo[r - (1 << len) + 1][len]])
+        return memo[l][len];
+    else
+        return memo[r - (1 << len) + 1][len];
+    if(arr[memo[l][len]] <=arr[memo[r-length +1][len]])
+        return memo[l][len];
+    return memo[l+ (1<<(len-1)) -1][len-1];
+}
+
+
+/// evaluate polynomials with one variable and 2 variables
+ll evaluatePoly(int Degree , vector <ll> & coefficients , ll x ){ /// have degrees from 0 to n inclusive
+
+    /// O (nlogn)
+    assert(Degree != coefficients.size() +1);
+    ll ret = 0 ;
+    for(int i = 0 ; i <= Degree ; ++i){
+        ret+=power(x , i)*coefficients[i];
+    }
+    return ret;
+
+
+}
+ll evaluatePoly1(int Degree , vector <ll> & coefficients , ll x ){ /// have degrees from 0 to n inclusive
+
+    /// O (n)
+    assert(Degree != coefficients.size() +1);
+    ll ret = 0 ;
+    for(int i = 0 ; i <= Degree ; ++i){
+        ret *=x; ret+=coefficients[Degree-i];
+    }
+    return ret;
+
+
+}
+
+ll evaluatePoly2(int Degree , vector <vector< ll> >& coefficients , ll x  , ll y){ /// have degrees from 0 to n inclusive
+    /// input is 2D matrix for the coefficients
+    assert(Degree != coefficients.size() +1);
+    ll ret = 0 ;
+    for(int i = 0 ; i <= Degree ; ++i){
+        for (int j = 0; j <=Degree ; ++j) {
+            ret += power(x, i) * coefficients[i][j] *power(y, j);
+        }
+    }
+    return ret;
+
+
+}
+
+/// solve quadritic equation
+template <typename T>
+pair <double  , double > solveQuadritic(T a , T b , T c){
+    double r1 = -b + sqrt(b*b - 4*a*c);
+    r1/=(2*a);
+    double  r2 = -b - sqrt(b*b - 4*a*c);
+    r2/=(2*a);
+
+    return {r1 , r2};
+
+
+}
+        /// diff polyomial function
+
+template <typename T>
+void diffPolynomial(vector <T> & coefficients ){///evaluate diff by evaluate poly function
+    vector<T > ret = coefficients;
+    ret.erase(ret.begin()); /// removing the free factor at x^0
+    for (int i = 0; i <ret.size() ; ++i) {  /// decrease  power and * old power
+        ret[i]*=(i+1);
+    }
+    for(auto it : ret)
+        cout << it<< endl;
+    coefficients = ret;
+
+
+}
+    /// multiply poly
+template <typename T>
+void multiplyPoly(vector <T>& coeff1 ,int degree1 , vector<T>&coeff2 , int degree2 ){
+    vector<T>res(degree1+degree2 +1 , 0);
+    for(int i = 0 ; i <= degree1 ; ++i){
+        for (int j = 0; j <=degree2 ; ++j) {
+            res[i+j] += coeff1[i]*coeff2[j];
+        }
+    }
+    for(auto it : res)
+        cout << it << " ";
+    cout << endl;
+
+}
+/// matrix operations
+
+
+typedef vector<double> row;
+typedef vector<row> matrix;
+#define rep(i,v) for(int i = 0 ; i <sz(v) ; ++i)
+matrix zero(int r , int c){
+
+    return matrix(r, row(c , 0));
+}
+matrix identity(int n ){ /// square matrix
+    matrix ret = zero(n,n);
+    rep(i,ret){
+        ret[i][i] = 1;
+    }
+    return ret;
+}
+ll matrixTrace(matrix & a){ /// square matrix
+    ll ret= 0 ;
+    rep(i,a){
+        ret+=a[i][i];
+    }
+    return ret;
+
+}
+matrix  rotateClockwise(matrix &v){
+    matrix ret= zero(sz(v[0]) , sz(v));
+    rep(i,v)
+        rep(j,v[0])
+            ret[j][sz(v)-i-1] = v[i][j];
+
+    return ret;
+}
+matrix  reflect(matrix &v){
+    matrix ret= zero(sz(v) , sz(v[0]));
+    rep(i,v)
+        rep(j,v[0])
+            ret[i][sz(v[0])-j-1] = v[i][j];
+
+    return ret;
+}
+matrix  addMatrices(matrix &v , matrix &x){
+    matrix ret= zero(sz(v) , sz(v[0]));
+    rep(i,v)
+        rep(j,v[0])
+            ret[i][j] = v[i][j]+ x[i][j];
+
+    return ret;
+}
+matrix addIdentity(const matrix & a){
+    matrix ret = a;
+    rep(i,a)
+        ret[i][i] = a[i][i]+1;
 
 }
